@@ -1,5 +1,7 @@
 using System;
+using CodeBase.Services.Input;
 using UnityEngine;
+using Zenject;
 
 namespace CodeBase.Logic.Player
 {
@@ -37,7 +39,12 @@ namespace CodeBase.Logic.Player
 
         public Action<MovementDirections> OnChangedDirection;
         public Action<PlayerMovementStates> OnChangedMovementState;
-    
+        private IInputService _inputService;
+
+        [Inject]
+        private void Construct(IInputService inputService) => 
+            _inputService = inputService;
+
         private void Update()
         {
             GetHorizontalInput();
@@ -150,7 +157,7 @@ namespace CodeBase.Logic.Player
     
 
         private void GetHorizontalInput() => 
-            _currentAxis = Input.GetAxis("Horizontal");
+            _currentAxis = _inputService.GetHorizontal();
 
         private void SetNewMovementDirection() =>
             _currentMovementDirection = _currentSpeed.x switch
